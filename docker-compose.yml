@@ -1,0 +1,21 @@
+# Postgres with pgvector, for the integration test.
+#
+#   npm run db:up
+#   DATABASE_URL=postgres://postgres:postgres@localhost:55432/hybrid npm test
+#   npm run db:down
+#
+# Without DATABASE_URL the integration test skips itself; the unit tests never
+# need a database.
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hybrid
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d hybrid"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
